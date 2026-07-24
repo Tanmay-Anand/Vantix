@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>dev.vantix</groupId>
+    <artifactId>vantix-parent</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>vx-spring-boot-starter</artifactId>
+  <name>Vantix :: Spring Boot Starter</name>
+  <description>Auto-configures the query client bean and the Hibernate error translator. This is the
+    ONE Vantix artifact intentionally version-pinned to Spring Boot 4 (IMPLEMENTATION_PLAN.md U1) —
+    the toolchain modules stay Boot-version-agnostic.</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>dev.vantix</groupId>
+      <artifactId>vx-runtime</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+</project>

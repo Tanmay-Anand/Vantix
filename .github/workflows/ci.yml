@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+# Cancel superseded runs on the same ref.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build · test · format · boundaries
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      # verify runs: compile, unit tests, Spotless check, enforcer (Java/Maven baseline +
+      # banned-Spring in core/runtime), and the ArchUnit module-boundary tests.
+      - name: mvn verify
+        run: ./mvnw -B --no-transfer-progress verify
+
+  error-prone:
+    name: Static analysis (error-prone)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - name: mvn -Perror-prone verify
+        run: ./mvnw -B --no-transfer-progress -Perror-prone verify
+
+  # ---------------------------------------------------------------------------------------------
+  # Phase 1+ matrix jobs — scaffolded here so the intent is committed; enable when the work lands.
+  #
+  # boot-portability:
+  #   Compile the GENERATED entity/repository output against both supported Boot baselines to prove
+  #   the contract stays portable (IMPLEMENTATION_PLAN.md U1). Requires Phase 1 codegen first.
+  #   strategy:
+  #     matrix:
+  #       boot: [ '3.5.16', '4.1.0' ]
+  #   run: ./mvnw -B verify -pl examples/demo-app -am -Dspring-boot.version=${{ matrix.boot }}
+  #
+  # postgres-matrix:
+  #   Run vx-migrate SQL-renderer / introspection Testcontainers tests across PostgreSQL 14-17
+  #   (IMPLEMENTATION_PLAN.md D12 — matrix in CI only; local tests pin one version). Requires Phase 2.
+  #   strategy:
+  #     matrix:
+  #       pg: [ '14', '15', '16', '17' ]
+  #   run: ./mvnw -B verify -pl vx-migrate -am -Dvantix.test.postgres.version=${{ matrix.pg }}
+  # ---------------------------------------------------------------------------------------------
