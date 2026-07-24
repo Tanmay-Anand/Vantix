@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>dev.vantix</groupId>
+  <artifactId>vantix-parent</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>Vantix (parent)</name>
+  <description>
+    Prisma-style developer-experience toolchain for Spring Boot: one schema.vx file drives
+    entity generation, Flyway migrations, a type-safe query API, and a local data browser.
+    Built on top of Hibernate/Spring Data JPA/Flyway, not instead of them.
+  </description>
+  <url>https://github.com/Tanmay-Anand/vantix</url>
+
+  <licenses>
+    <license>
+      <name>Apache-2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <!--
+    Module list mirrors IMPLEMENTATION_PLAN.md §2.2. `docs/` is intentionally NOT a Maven
+    module. Reactor order is resolved by Maven from the inter-module dependencies below.
+  -->
+  <modules>
+    <module>vx-core</module>
+    <module>vx-runtime</module>
+    <module>vx-codegen</module>
+    <module>vx-migrate</module>
+    <module>vx-cli</module>
+    <module>vx-maven-plugin</module>
+    <module>vx-spring-boot-starter</module>
+    <module>vx-studio</module>
+    <module>vx-architecture-tests</module>
+    <module>examples/demo-app</module>
+  </modules>
+
+  <properties>
+    <maven.compiler.release>21</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    <!-- Primary target runtime (see IMPLEMENTATION_PLAN.md U1 / D-row for the Boot 3.5 EOL rationale). -->
+    <spring-boot.version>4.1.0</spring-boot.version>
+
+    <!-- Non-BOM-managed dependency versions. -->
+    <javapoet.version>0.18.0</javapoet.version>
+    <picocli.version>4.7.7</picocli.version>
+    <archunit.version>1.4.2</archunit.version>
+    <error-prone.version>2.50.0</error-prone.version>
+
+    <!-- Build plugin versions pinned to Maven-3.9-compatible stable releases
+         (Central currently marks Maven-4 pre-releases as "latest"). -->
+    <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+    <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
+    <maven-failsafe-plugin.version>3.5.2</maven-failsafe-plugin.version>
+    <maven-jar-plugin.version>3.4.1</maven-jar-plugin.version>
+    <maven-enforcer-plugin.version>3.6.3</maven-enforcer-plugin.version>
+    <maven-plugin-plugin.version>3.15.2</maven-plugin-plugin.version>
+    <maven-plugin-annotations.version>3.15.2</maven-plugin-annotations.version>
+    <maven-plugin-api.version>3.9.16</maven-plugin-api.version>
+    <spotless-plugin.version>3.8.0</spotless-plugin.version>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <!--
+        Import the Spring Boot BOM for VERSIONS ONLY. This harmonizes JUnit 5, AssertJ,
+        Testcontainers, Jackson, Hibernate, Flyway, and the PostgreSQL driver across every
+        module without adding Spring to any module that does not explicitly declare it.
+        vx-core / vx-codegen / vx-migrate / vx-cli stay Spring-free by design.
+      -->
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring-boot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <!-- Reactor module versions. -->
+      <dependency>
+        <groupId>dev.vantix</groupId>
+        <artifactId>vx-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>dev.vantix</groupId>
+        <artifactId>vx-runtime</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>dev.vantix</groupId>
+        <artifactId>vx-codegen</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>dev.vantix</groupId>
+        <artifactId>vx-migrate</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>dev.vantix</groupId>
+        <artifactId>vx-cli</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <!-- Non-BOM-managed third-party libraries. -->
+      <dependency>
+        <groupId>com.palantir.javapoet</groupId>
+        <artifactId>javapoet</artifactId>
+        <version>${javapoet.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>info.picocli</groupId>
+        <artifactId>picocli</artifactId>
+        <version>${picocli.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.tngtech.archunit</groupId>
+        <artifactId>archunit-junit5</artifactId>
+        <version>${archunit.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${maven-compiler-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${maven-surefire-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>${maven-failsafe-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>${maven-jar-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-plugin-plugin</artifactId>
+          <version>${maven-plugin-plugin.version}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      <!-- Coding-standard gate 1: formatting (palantir-java-format, matching the JavaPoet fork choice). -->
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <version>${spotless-plugin.version}</version>
+        <configuration>
+          <java>
+            <palantirJavaFormat/>
+            <removeUnusedImports/>
+            <importOrder/>
+            <trimTrailingWhitespace/>
+            <endWithNewline/>
+          </java>
+        </configuration>
+        <executions>
+          <execution>
+            <id>spotless-check</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Coding-standard gate 2: build sanity (Java/Maven baseline + reactor convergence). -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>${maven-enforcer-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>enforce-baseline</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireJavaVersion>
+                  <version>[21,22)</version>
+                </requireJavaVersion>
+                <requireMavenVersion>
+                  <version>[3.9,)</version>
+                </requireMavenVersion>
+                <reactorModuleConvergence/>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <!--
+      error-prone is CI-activated (mvn -Perror-prone verify) rather than always-on, to keep the
+      local inner loop fast. See IMPLEMENTATION_PLAN.md §4.6 (CI matrix) and the inner-loop rationale.
+
+      The JDK-16+ add-exports/add-opens the plugin needs are supplied to the Maven JVM via
+      .mvn/jvm.config (the compiler runs in-process, so the `-J` prefix would be ignored). Those
+      exports are benign for the default build — they are only exercised when `-Xplugin:ErrorProne`
+      is passed, which happens only in this profile.
+    -->
+    <profile>
+      <id>error-prone</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <compilerArgs>
+                <arg>-XDcompilePolicy=simple</arg>
+                <arg>--should-stop=ifError=FLOW</arg>
+                <!-- Required by error-prone 2.5x on JDK 21. -->
+                <arg>-XDaddTypeAnnotationsToSymbol=true</arg>
+                <arg>-Xplugin:ErrorProne</arg>
+              </compilerArgs>
+              <annotationProcessorPaths>
+                <path>
+                  <groupId>com.google.errorprone</groupId>
+                  <artifactId>error_prone_core</artifactId>
+                  <version>${error-prone.version}</version>
+                </path>
+              </annotationProcessorPaths>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+</project>

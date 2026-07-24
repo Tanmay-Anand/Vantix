@@ -1,0 +1,28 @@
+# Normalize line endings to LF on checkin for all text files (D12).
+# This is load-bearing: golden-file tests compare generated .java/.sql byte-for-byte, and a
+# developer's git autocrlf setting must never leak CRLF into fixtures or generated output.
+* text=auto eol=lf
+
+# Golden fixtures and generated-source expectations: LF, unconditionally.
+src/test/resources/golden/** text eol=lf
+**/*.vx        text eol=lf
+
+# Language sources — always LF.
+*.java         text eol=lf
+*.sql          text eol=lf
+*.xml          text eol=lf
+*.yml          text eol=lf
+*.yaml         text eol=lf
+*.properties   text eol=lf
+*.md           text eol=lf
+
+# Shell vs batch scripts have OS-specific ending requirements.
+*.sh           text eol=lf
+mvnw           text eol=lf
+*.bat          text eol=crlf
+*.cmd          text eol=crlf
+
+# Binary assets — never touched.
+*.png          binary
+*.jpg          binary
+*.jar          binary

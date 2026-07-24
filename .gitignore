@@ -1,0 +1,25 @@
+# Maven build output
+target/
+# Generated sources are disposable and regenerated every build — never committed.
+**/generated-sources/
+**/generated-test-sources/
+
+# The Phase 0 throwaway spike (M0.1-T1) is deliberately not committed.
+/spike/
+
+# Maven wrapper: keep the scripts + .mvn/wrapper/maven-wrapper.properties, ignore the downloaded jar.
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE
+*.iml
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs / local env
+*.log
+.env
