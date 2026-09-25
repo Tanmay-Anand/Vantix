@@ -1,0 +1,7 @@
+datasource {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator { package = "com.example" }
+

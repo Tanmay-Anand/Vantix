@@ -5,40 +5,92 @@
  */
 package dev.vantix.maven;
 
-import java.io.File;
+import dev.vantix.cli.Workflow;
+import dev.vantix.core.diagnostic.Diagnostic;
+import dev.vantix.core.diagnostic.DiagnosticRenderer;
+import java.io.IOException;
+import java.nio.file.Path;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.project.MavenProject;
 
 /**
- * Generates Vantix sources (entities, repositories) from {@code schema.vx} into
- * {@code target/generated-sources/vantix}, bound to the {@code generate-sources} phase so the
- * output is on the compile source root before {@code javac} runs.
+ * {@code vantix:generate}, bound to {@code generate-sources}: compiles {@code schema.vx}, writes
+ * entities and repositories, and adds the output directory as a compile source root — so
+ * {@code mvn compile} is all a user runs.
  *
- * <p>Phase 0 skeleton: logs its wiring and does not yet invoke the generator. The real generation
- * pipeline is delegated to {@code vx-cli}/{@code vx-codegen} in Phase 1.
+ * <p>All generator settings (package, output directory, Generation Gap, ...) come from
+ * {@code schema.vx} itself (D8); the plugin only needs to know where that file is. It runs the exact
+ * code path of {@code vantix generate}, so the two can never disagree. Unchanged files are not
+ * rewritten, so running this on every build does not trigger recompilation.
  */
 @Mojo(name = "generate", defaultPhase = LifecyclePhase.GENERATE_SOURCES, threadSafe = true, requiresProject = true)
 public class GenerateMojo extends AbstractMojo {
 
     /** Location of the schema file, relative to the project base directory. */
-    @Parameter(property = "vantix.schemaPath", defaultValue = "vantix/schema.vx")
-    private String schemaPath;
+    @Parameter(property = "vantix.schemaPath", defaultValue = Workflow.DEFAULT_SCHEMA)
+    String schemaPath;
 
-    /** Directory the generated Java sources are written to. */
-    @Parameter(
-            property = "vantix.outputDirectory",
-            defaultValue = "${project.build.directory}/generated-sources/vantix")
-    private File outputDirectory;
+    /** Skip generation entirely. */
+    @Parameter(property = "vantix.skip", defaultValue = "false")
+    boolean skip;
+
+    @Parameter(defaultValue = "${project}", readonly = true, required = true)
+    MavenProject project;
 
     @Override
-    public void execute() throws MojoExecutionException {
-        getLog().info("vantix:generate (Phase 0 skeleton)");
-        getLog().info("  schemaPath      = " + schemaPath);
-        getLog().info("  outputDirectory = " + outputDirectory);
-        // Phase 1: parse schemaPath -> Schema model -> JavaPoet emit into outputDirectory,
-        // then add outputDirectory as a compile source root.
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        if (skip) {
+            getLog().info("vantix:generate skipped (vantix.skip=true)");
+            return;
+        }
+        Path basedir = project.getBasedir().toPath();
+        Path schemaFile = basedir.resolve(schemaPath);
+
+        Workflow.Generation g;
+        try {
+            g = Workflow.generate(basedir, schemaFile);
+        } catch (Workflow.MissingSchemaException e) {
+            throw new MojoFailureException("No Vantix schema at " + schemaPath
+                    + ". Create one with `mvn vantix:init`, or set <schemaPath> in the plugin configuration.");
+        } catch (IOException e) {
+            throw new MojoExecutionException("vantix:generate failed: " + e.getMessage(), e);
+        }
+
+        logDiagnostics(g.validation());
+        if (!g.validation().ok()) {
+            throw new MojoFailureException(
+                    schemaPath + " has " + g.validation().result().errorCount() + " error(s); see above");
+        }
+        g.report().warnings().forEach(getLog()::warn);
+        g.report().conflicts().forEach(getLog()::error);
+        if (!g.report().conflicts().isEmpty()) {
+            throw new MojoFailureException("Generated sources conflict with hand-written classes; see above");
+        }
+
+        var r = g.report();
+        getLog().info("Vantix: " + r.total() + " file(s) from " + schemaPath + " in "
+                + g.elapsed().toMillis() + " ms (" + r.written().size() + " written, "
+                + r.unchanged().size() + " unchanged)");
+        r.scaffolded().forEach(p -> getLog().info("Vantix: scaffolded " + basedir.relativize(p) + " (yours to edit)"));
+        r.deleted().forEach(p -> getLog().info("Vantix: deleted stale " + basedir.relativize(p)));
+
+        project.addCompileSourceRoot(g.outputDirectory().toString());
+    }
+
+    private void logDiagnostics(Workflow.Validation v) {
+        DiagnosticRenderer renderer = new DiagnosticRenderer(schemaPath, v.source(), false);
+        for (Diagnostic d : v.result().diagnostics()) {
+            String text = renderer.render(d).stripTrailing();
+            if (d.isError()) {
+                getLog().error(text);
+            } else {
+                getLog().warn(text);
+            }
+        }
     }
 }

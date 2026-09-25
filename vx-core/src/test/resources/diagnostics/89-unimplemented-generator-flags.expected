@@ -1,0 +1,11 @@
+warning: `generateMetamodel` is not implemented yet and is ignored
+ --> 89-unimplemented-generator-flags.vx:3:23
+  |
+3 |   generateMetamodel = true
+  |                       ^^^^ the typed metamodel (`UserFields`) arrives with the query builder in Phase 3
+
+warning: `generateDtos` is not implemented yet and is ignored
+ --> 89-unimplemented-generator-flags.vx:4:23
+  |
+4 |   generateDtos      = true
+  |                       ^^^^ DTO generation is planned for Phase 5

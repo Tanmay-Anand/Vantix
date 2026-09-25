@@ -1,0 +1,5 @@
+generator { package = "com.example" }
+
+entity Country {
+  code String @id @generated
+}

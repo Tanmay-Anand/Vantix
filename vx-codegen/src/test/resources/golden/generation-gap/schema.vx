@@ -1,0 +1,24 @@
+// Generation Gap: generated `AuthorBase`/`BookBase` hold the state; `Author`/`Book` are
+// scaffolded once into src/main/java for the user to own.
+generator {
+  package          = "com.example.library"
+  useGenerationGap = true
+}
+
+entity Author {
+  id    Long   @id @generated
+  name  String @length(200)
+  books Book[]
+
+  @@table("authors")
+}
+
+entity Book {
+  id       Long   @id @generated
+  isbn     String @unique @length(13)
+  title    String
+  author   Author @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId Long
+
+  @@table("books")
+}

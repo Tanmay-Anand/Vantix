@@ -1,0 +1,17 @@
+error: Expected `true` or `false`, found `"true"`
+ --> 88-generator-setting-types.vx:3:22
+  |
+3 |   useGenerationGap = "true"
+  |                      ^^^^^^
+
+error: Expected `true` or `false`, found `yes`
+ --> 88-generator-setting-types.vx:4:22
+  |
+4 |   generateRepos    = yes
+  |                      ^^^
+
+error: Unknown generator setting `entitySufix`
+ --> 88-generator-setting-types.vx:5:3
+  |
+5 |   entitySufix      = "Entity"
+  |   ^^^^^^^^^^^ did you mean `entitySuffix`?

@@ -1,0 +1,5 @@
+entity User {
+  id Long @id
+
+  @@table("users")
+}

@@ -1,0 +1,3 @@
+warning: No generator package set; generating into `vantix.generated`
+  --> 85-no-generator-warning.vx
+   = help: add `generator { package = "com.acme.app" }`; Spring Boot only finds entities under your application's package

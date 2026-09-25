@@ -1,0 +1,5 @@
+error: Unknown entity attribute `@@tabel`
+ --> 72-unknown-entity-attribute.vx:6:5
+  |
+6 |   @@tabel("users")
+  |     ^^^^^ did you mean `@@table`?

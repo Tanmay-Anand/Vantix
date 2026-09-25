@@ -1,0 +1,5 @@
+error: Entities `Member` and `Account` both map to table `account`
+ --> 74-duplicate-table.vx:9:8
+  |
+9 | entity Account {
+  |        ^^^^^^^ use `@@table("...")` to give one of them another name

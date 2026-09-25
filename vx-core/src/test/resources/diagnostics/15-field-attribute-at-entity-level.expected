@@ -1,0 +1,5 @@
+error: `@index` is an entity attribute and needs `@@`
+ --> 15-field-attribute-at-entity-level.vx:5:3
+  |
+5 |   @index([id])
+  |   ^ write `@@index(...)`

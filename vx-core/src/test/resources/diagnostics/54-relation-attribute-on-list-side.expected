@@ -1,0 +1,5 @@
+error: `@relation` belongs on the single-valued side of a relation
+ --> 54-relation-attribute-on-list-side.vx:5:16
+  |
+5 |   posts Post[] @relation(fields: [id], references: [authorId])
+  |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ put it on the `Post` field that holds the foreign key

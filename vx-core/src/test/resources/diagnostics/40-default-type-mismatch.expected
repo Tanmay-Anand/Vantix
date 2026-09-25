@@ -1,0 +1,23 @@
+error: `@default(42)` does not fit `name`, which is `String`
+ --> 40-default-type-mismatch.vx:5:27
+  |
+5 |   name   String  @default(42)
+  |                           ^^ quote it: `"42"`
+
+error: `@default(1.5)` does not fit `stock`, which is `Int`
+ --> 40-default-type-mismatch.vx:6:27
+  |
+6 |   stock  Int     @default(1.5)
+  |                           ^^^ use a whole number
+
+error: `@default("yes")` does not fit `active`, which is `Boolean`
+ --> 40-default-type-mismatch.vx:7:27
+  |
+7 |   active Boolean @default("yes")
+  |                           ^^^^^ use `true` or `false`
+
+error: `@default(now())` does not fit `added`, which is `String`
+ --> 40-default-type-mismatch.vx:8:27
+  |
+8 |   added  String  @default(now())
+  |                           ^^^^^ `now()` needs an `Instant`, `LocalDateTime` or `LocalDate` field

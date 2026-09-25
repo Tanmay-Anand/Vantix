@@ -1,0 +1,5 @@
+error: Composite primary keys (`@@id`) are not supported yet
+ --> 18-composite-id-rejected.vx:7:3
+  |
+7 |   @@id([memberId, teamId])
+  |   ^^^^^^^^^^^^^^^^^^^^^^^^ mark a single field with `@id`; composite keys are planned for Phase 2.5

@@ -1,0 +1,12 @@
+generator { package = "com.example" }
+
+entity Member {
+  id     Long    @id @generated
+  email  Strng   @unique
+  age    Int     @lenght(3)
+  role   Rol
+}
+
+entity Post {
+  title String
+}

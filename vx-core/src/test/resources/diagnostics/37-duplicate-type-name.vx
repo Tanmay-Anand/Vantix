@@ -1,0 +1,7 @@
+generator { package = "com.example" }
+
+enum Member { ADMIN }
+
+entity Member {
+  id Long @id
+}

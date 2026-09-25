@@ -1,0 +1,7 @@
+datasource {
+  provider = "postgresql"
+  urll     = env("DATABASE_URL")
+}
+
+generator { package = "com.example" }
+

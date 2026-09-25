@@ -1,0 +1,8 @@
+error: `Member` is already declared
+ --> 37-duplicate-type-name.vx:5:8
+  |
+5 | entity Member {
+  |        ^^^^^^ entity and enum names must be unique
+  |
+3 | enum Member { ADMIN }
+  |      ------ first declared here

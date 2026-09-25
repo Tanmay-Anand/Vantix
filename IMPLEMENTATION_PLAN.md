@@ -394,39 +394,55 @@ All five source unknowns are resolved; kept here with their reasoning as a decis
 
 ### Phase 0 — Foundations
 - [x] Throwaway spike: parse 2 entities, print CREATE TABLE, emit one entity string *(in `/spike`, git-ignored; runs green)*
-- [ ] Build + use a scratch Prisma app; capture DX notes *(developer exercise — not automatable)*
+- [ ] Build + use a scratch Prisma app; capture DX notes *(developer exercise — not automatable; too late to shape Phase 1's error text, so do it **before Phase 2** and focus on `migrate dev`'s rename and destructive-change prompts)*
 - [x] Parent `pom.xml` + all 11 modules from §2.2 (compiling; `mvn verify` green)
 - [x] GitHub Actions CI: build/test/Spotless/error-prone/ArchUnit *(`.github/workflows/ci.yml`; both `verify` and `-Perror-prone verify` verified green locally)*
 - [x] Apache-2.0 `LICENSE` (canonical text) + `NOTICE`, SPDX headers on every source, `CONTRIBUTING.md`, `.gitignore`
 - [x] `maven-enforcer` (Java 21 / Maven 3.9 baseline + reactor convergence) + banned-Spring rules in `vx-core` & `vx-runtime`; `mvnw` committed (pinned 3.9.14)
 - [x] `.gitattributes` (`* text=auto eol=lf`; `eol=lf` on golden fixtures) — landed before any golden test (D12)
-- [x] CI default build targets Boot 4.1 / Hibernate 7; portability + Postgres matrix jobs scaffolded (commented) in `ci.yml`, to be enabled once Phase 1 codegen / Phase 2 Testcontainers land (U1, D12)
-- *Note:* error-prone runs via `.mvn/jvm.config` add-exports + the `error-prone` profile (JDK-21 needs `-XDaddTypeAnnotationsToSymbol=true`); Testcontainers 2.x uses `org.testcontainers:testcontainers-*` coordinates (managed transitively by the Boot 4.1 BOM).
+- [x] CI default build targets Boot 4.1 / Hibernate 7; Postgres 14–17 matrix still scaffolded (commented) until Phase 2 (U1, D12)
+- [ ] Boot-portability matrix job **green on GitHub Actions** *(enabled in `ci.yml`; the same command passed locally on Boot 3.5.16 / Hibernate 6.6 — enabled is not verified: tick after the first green CI run)*
+- *Note:* error-prone runs via `.mvn/jvm.config` add-exports + the `error-prone` profile (JDK-21 needs `-XDaddTypeAnnotationsToSymbol=true`); Testcontainers 2.x uses `org.testcontainers:testcontainers-*` coordinates, pinned by importing `testcontainers-bom` **before** the Boot BOM so the Boot 3.5 portability build (which only knows TC 1.x) still resolves them.
 
 ### Phase 1 — Core
-- [ ] EBNF grammar spec in `docs/grammar.md` (before parser)
-- [ ] Resolved `Schema`/`Entity`/`Field`/`Relation`/`EnumDecl` records + `SourcePosition` + **nullable `schemaName`** (D14)
-- [ ] `Schema` model JSON serialize/deserialize (round-trip tested) + **`formatVersion` int in snapshot** (D14)
-- [ ] Parser rejects `@@schema` with "not yet supported" diagnostic (D14)
-- [ ] Lexer with `SourcePosition` on every token
-- [ ] Recursive-descent parser → AST
-- [ ] Error recovery + multi-error reporting with caret + "did you mean"
-- [ ] `Diagnostics` type + terminal renderer
-- [ ] Semantic analysis → `Schema` model (types, relations, `mappedBy`)
-- [ ] Validation rules (dup names, unresolved relations, missing `@id`, bad attribute combos)
-- [ ] Content-hash-aware source writer
-- [ ] Entity generator (relations, fetch defaults)
-- [ ] `equals`/`hashCode`/`toString` (id-based, proxy-safe) + exhaustive tests
-- [ ] Repository generator + derived `findByX` for `@unique`
-- [ ] Generation Gap (`useGenerationGap`) support
-- [ ] `vantix init` / `validate` / `generate` / `generate --watch`
-- [ ] `vx-maven-plugin` `GenerateMojo` bound to `generate-sources`
-- [ ] `examples/demo-app` boots on generated code
-- [ ] Golden-file harness + Java Compiler API smoke test
-- [ ] Parser diagnostic-corpus tests
-- [ ] ArchUnit module-boundary tests green
+- [x] EBNF grammar spec in `docs/grammar.md` (before parser) *(v1 grammar; scalar types, attributes, `@@id`/`@@schema` flagged as rejected)*
+- [x] Resolved `Schema`/`Entity`/`Field`/`Relation`/`EnumDecl` records + `SourcePosition` + **nullable `schemaName`** (D14) *(immutable records in `dev.vantix.core.model`; sealed `FieldType`/`DefaultValue`)*
+- [x] `Schema` model JSON serialize/deserialize (round-trip tested) + **`formatVersion` int in snapshot** (D14) *(`SchemaMapper`, Jackson 2.21; 4 tests incl. exact round-trip, determinism, formatVersion-first)*
+- [x] Parser rejects `@@schema` with "not yet supported" diagnostic (D14) *(also `@@id` (D6); both are kept in the AST so analysis does not pile on follow-up errors)*
+- [x] Lexer with `SourcePosition` on every token *(hand-written `Lexer`; contextual keywords, `@@`/`@`, comments, error recovery; 11 tests + `Diagnostic`/`Severity` types)*
+- [x] Recursive-descent parser → AST *(`dev.vantix.core.parser.Parser` → `dev.vantix.core.ast.Ast` records; lexer gained `FLOAT_LITERAL` and string escapes first, while nothing depended on the token stream)*
+- [x] Error recovery + multi-error reporting with caret + "did you mean" *(member-level recovery inside entities, top-level resync otherwise; syntax errors right after a lexical error are suppressed as cascades; `Suggestions` = optimal-string-alignment distance)*
+- [x] `Diagnostics` type + terminal renderer *(`Diagnostic` record + `DiagnosticRenderer`: `file:line:col`, source line, caret, suggestion; optional ANSI colour)*
+- [x] Semantic analysis → `Schema` model (types, relations, `mappedBy`) *(`SchemaAnalyzer`; `SchemaCompiler` is the one-call front end; rules documented in `docs/grammar.md` § Semantics)*
+- [x] Validation rules (dup names, unresolved relations, missing `@id`, bad attribute combos) *(plus Java/PostgreSQL reserved words, `java.lang` shadowing, generated-class clashes, default-value typing/range, FK type/nullability/`onDelete` consistency)*
+- [x] Content-hash-aware source writer *(`SourceWriter`: byte-identical files untouched (mtime preserved), atomic writes, stale generated files pruned by marker only, scaffolds never overwritten, conflicts with hand-written classes reported)*
+- [x] Entity generator (relations, fetch defaults) *(owning side `@ManyToOne`/`@OneToOne(fetch = LAZY)` + `@JoinColumn`; the FK scalar is a read-only mirror (`insertable/updatable = false`) whose getter prefers the relation; `@default` mirrored as Java initialisers)*
+- [x] `equals`/`hashCode`/`toString` (id-based, proxy-safe) + exhaustive tests *(effective class via `HibernateProxy.getHibernateLazyInitializer().getPersistentClass()` rather than `Hibernate.getClass()`, which would initialize the proxy; verified with real proxies against PostgreSQL in the demo app. `Hibernate.getClassLazy()` (present in 6.6 and 7.4) was considered and rejected: its bytecode throws `LazyInitializationException` for a detached uninitialized proxy and initializes the proxy when the entity has subclasses. The equality matrix covers proxy/proxy, proxy/loaded both ways, `HashSet.add(proxy)` without a load, detached vs managed, two unsaved instances, and hash stability across persist; a deliberate `other.id` mutation makes two of those tests fail)*
+- [x] Repository generator + derived `findByX` for `@unique` *(returns `Optional`; skips `Bytes`/`Json`)*
+- [x] Generation Gap (`useGenerationGap`) support *(`abstract @MappedSuperclass XBase` regenerated; `@Entity @Table X extends XBase` scaffolded once into `src/main/java`; a scaffold whose `@Table` drifts from the schema gets a warning)*
+- [x] `vantix init` / `validate` / `generate` / `generate --watch` *(shared `Workflow`; `--json`, `--verbose`, `--no-color`, `--schema`, `-C`; `init` derives the package from the `@SpringBootApplication` class)*
+- [x] `vx-maven-plugin` `GenerateMojo` bound to `generate-sources` *(runs `Workflow.generate`, adds the compile source root; plus `vantix:init`. Per D8 the `outputDirectory` parameter was removed: `generator.output` in `schema.vx` decides)*
+- [x] `examples/demo-app` boots on generated code *(plugin-generated, Testcontainers PostgreSQL 17; `ddl-auto=create` until Phase 2 emits migrations; also green on Boot 3.5.16 / Hibernate 6.6)*
+- [x] Golden-file harness + Java Compiler API smoke test *(3 cases: shop, generation-gap, kitchen-sink; compiled against real JPA/Hibernate/Spring Data with `-Xlint:all` and zero warnings; `-Dvantix.updateGolden=true` regenerates)*
+- [x] Parser diagnostic-corpus tests *(67 cases asserting exact rendered text, lexer through semantic errors)*
+- [x] ArchUnit module-boundary tests green *(5 rules: + core layering, codegen names-never-loads JPA/Hibernate/Spring, Spring-free toolchain)*
+
+**Phase 1 review follow-ups (done):**
+- [x] Secondary source locations on diagnostics (rustc-style): a type mismatch points at the FK declaration, with the `@relation` use as context; duplicates show "first declared here"
+- [x] Strict number literals: `.5`, `1.`, `1e5`, `10L`, and leading zeros (octal in generated Java) are errors with the fix
+- [x] `@id` with `@default` is an error (a Java-side id default makes `save()` merge and breaks unsaved-instance equality)
+- [x] `generator.output` must stay inside the project (absolute paths and `..` rejected); resolved against the project base directory
+- [x] Warning on inverse one-to-one fields (Hibernate cannot lazy-load them: 1 + N queries, measured with Hibernate statistics in the demo app)
+- [x] Orphaned Generation Gap scaffolds (entity removed/renamed) reported by Vantix, not by javac
+- [x] FK mirror getter documents `setX(repository.getReferenceById(id))`; no setter, no `@NotNull`
+- [x] `Locale.ROOT` for every case conversion and number format; generation checked under `tr-TR`, `ar-SA`, `hi-IN`
+- [x] Stranger integration test (`vx-maven-plugin/src/it/stranger-app`, maven-invoker-plugin): blank Boot app, `vantix:init`, `compile`, then `compile` again with nothing regenerated or recompiled
+
+**Phase 1 DoD met:** `./mvnw verify` builds all 11 modules and runs 213 tests (core 140, codegen 21, CLI 20, plugin 4, ArchUnit 5, demo app 23) plus the stranger-app invoker IT; `-Perror-prone verify` clean. Only the Phase 0 Prisma study remains open (a developer exercise).
 
 ### Phase 2 — Migrations
+- [ ] **Exit criterion:** the demo app drops `ddl-auto=create`, applies the Vantix-generated Flyway migrations and runs with `ddl-auto=validate` (today it exercises Hibernate's DDL, not Vantix's, so FK indexes, column lengths and defaults are not yet cross-checked)
+- [ ] Decide before release how to treat inverse one-to-one fields: keep the warning, stop generating that side, or support bytecode enhancement
 - [ ] Snapshot write/read (`vantix/snapshot.json`)
 - [ ] `sealed interface SchemaChange` + record variants
 - [ ] `SchemaDiffer` → typed change list (pure, debug decision trail)

@@ -1,0 +1,5 @@
+error: Unknown field `createdat` in `@@index`
+ --> 70-index-unknown-field.vx:7:12
+  |
+7 |   @@index([createdat])
+  |            ^^^^^^^^^ did you mean `createdAt`?

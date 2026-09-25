@@ -1,0 +1,8 @@
+error: `authorId` must be optional because relation `author` is optional
+  --> 53-relation-nullability-mismatch.vx:10:12
+   |
+10 |   authorId Long
+   |            ^^^^ write `authorId Long?`
+   |
+ 9 |   author   Member? @relation(fields: [authorId], references: [id])
+   |            ------- optional relation

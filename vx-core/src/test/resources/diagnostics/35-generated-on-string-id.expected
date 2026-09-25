@@ -1,0 +1,5 @@
+error: `@generated` needs a `Long`, `Int` or `UUID` id, not `String`
+ --> 35-generated-on-string-id.vx:4:19
+  |
+4 |   code String @id @generated
+  |                   ^^^^^^^^^^ `String` ids must be assigned by the application

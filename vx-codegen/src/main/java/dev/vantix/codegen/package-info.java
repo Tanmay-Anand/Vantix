@@ -11,6 +11,7 @@
  * {@code User_}; see IMPLEMENTATION_PLAN.md D3).
  *
  * <p>Generated sources are written under {@code target/generated-sources} and are disposable:
- * content-hashed before write to preserve incremental builds, never edited, excluded from VCS.
+ * compared with what is on disk before writing (identical files are left untouched to preserve
+ * incremental builds), never edited, excluded from VCS.
  */
 package dev.vantix.codegen;

@@ -1,0 +1,11 @@
+warning: No generator package set; generating into `vantix.generated`
+ --> 20-missing-equals-in-block.vx:1:1
+  |
+1 | generator {
+  | ^^^^^^^^^ add `generator { package = "com.acme.app" }`; Spring Boot only finds entities under your application's package
+
+error: Expected `=` after `package`, found string "com.example"
+ --> 20-missing-equals-in-block.vx:2:11
+  |
+2 |   package "com.example"
+  |           ^^^^^^^^^^^^^

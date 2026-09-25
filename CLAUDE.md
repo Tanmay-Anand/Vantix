@@ -4,7 +4,21 @@ A Prisma-style developer-experience toolchain for Spring Boot — one `schema.vx
 
 ## Project Status
 
-Pre-alpha, under design. No source code yet — the repo contains a project plan and README only.
+Pre-alpha. **Phases 0 and 1 are done**: `schema.vx` → lexer → parser → semantic analysis →
+entities + repositories via `vantix init|validate|generate [--watch]` and the Maven plugin; the demo
+app boots on generated code against PostgreSQL. Phase 2 (migrations) is next. `IMPLEMENTATION_PLAN.md`
+§8 is the live checklist; `docs/grammar.md` is the normative language spec (grammar + semantics).
+
+## Working in this repo
+
+- Build everything as CI does: `./mvnw verify` (tests, Spotless, enforcer, ArchUnit; the demo app's
+  Testcontainers tests need Docker and are skipped without it). Static analysis: `./mvnw -Perror-prone verify`.
+- Format before committing: `./mvnw spotless:apply`.
+- Building one module needs its upstream modules: `-pl <module> -am` (plain `-pl` trips the
+  enforcer's reactor-convergence rule).
+- Diagnostic wording and generated code are pinned by golden files (`vx-core/src/test/resources/diagnostics/`,
+  `vx-codegen/src/test/resources/golden/`). After an intentional change: `./mvnw test -Dvantix.updateGolden=true`,
+  then review the diff like code.
 
 ## Tech Stack
 
@@ -40,7 +54,7 @@ vantix/
 - **Build on Hibernate, don't replace it.** Generated code is plain Spring/JPA — users can eject at any time.
 - **Emit Flyway SQL, don't run migrations.** Users review SQL before Flyway applies it.
 - **Snapshot diffing** (not live-DB diffing) — deterministic, works offline.
-- **Generated static metamodel** (`User_.EMAIL`) not lambda reflection — better IDE support, GraalVM-safe.
+- **Generated static metamodel** (`UserFields.EMAIL`, never `User_`, which clashes with `hibernate-jpamodelgen` — D3) not lambda reflection — better IDE support, GraalVM-safe.
 - **Generation Gap pattern** — emit `abstract UserBase`, scaffold `User extends UserBase` once, never touch it again.
 - **Generated sources go in `target/`**, never in VCS.
 

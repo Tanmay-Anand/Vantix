@@ -8,6 +8,7 @@ package dev.vantix.core.lexer;
 import dev.vantix.core.diagnostic.Diagnostic;
 import dev.vantix.core.diagnostic.Severity;
 import dev.vantix.core.model.SourcePosition;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,7 +74,13 @@ public final class Lexer {
             case ':' -> add(TokenType.COLON);
             case '=' -> add(TokenType.EQUALS);
             case '?' -> add(TokenType.QUESTION);
-            case '.' -> add(TokenType.DOT);
+            case '.' -> {
+                if (isDigit(peek())) {
+                    leadingDotNumber();
+                } else {
+                    add(TokenType.DOT);
+                }
+            }
             case '@' -> {
                 if (peek() == '@') {
                     advance();
@@ -102,16 +109,98 @@ public final class Lexer {
         add(TokenType.IDENTIFIER);
     }
 
+    /**
+     * {@code INT} or {@code FLOAT}, deliberately strict: numbers flow verbatim into generated Java
+     * (and later SQL), where {@code 010} is octal, {@code .5} and {@code 1e5} are not portable
+     * literals, and a suffix like {@code 10L} means something else. Malformed numbers are reported
+     * here; the well-formed prefix is still emitted as a token so later stages do not pile on.
+     */
     private void number() {
         while (isDigit(peek())) {
             advance();
         }
-        add(TokenType.INT_LITERAL);
+        TokenType type = TokenType.INT_LITERAL;
+        if (peek() == '.' && isDigit(peekNext())) {
+            advance();
+            while (isDigit(peek())) {
+                advance();
+            }
+            type = TokenType.FLOAT_LITERAL;
+        }
+        int prefixEnd = current;
+        String prefix = source.substring(tokenStart, prefixEnd);
+
+        if (peek() == '.') {
+            advance(); // `1.` — nothing valid can follow a number with a dot
+            report("A decimal needs digits after the point: `" + lexemeSoFar() + "`", "write `" + prefix + ".0`");
+        } else if (isAlpha(peek())) {
+            char first = peek();
+            while (isAlphaNumeric(peek()) || ((peek() == '+' || peek() == '-') && isExponentMarker(previousChar()))) {
+                advance();
+            }
+            if ((first == 'e' || first == 'E') && lexemeSoFar().matches("-?\\d+(\\.\\d+)?[eE][+-]?\\d+")) {
+                report(
+                        "Exponent notation is not supported: `" + lexemeSoFar() + "`",
+                        "write the number out in full, e.g. `" + expanded(lexemeSoFar()) + "`");
+            } else {
+                report("Invalid number `" + lexemeSoFar() + "`", "numbers take no suffix; write `" + prefix + "`");
+            }
+        } else {
+            String digits = prefix.startsWith("-") ? prefix.substring(1) : prefix;
+            String integerPart = digits.contains(".") ? digits.substring(0, digits.indexOf('.')) : digits;
+            if (integerPart.length() > 1 && integerPart.charAt(0) == '0') {
+                String canonical = (prefix.startsWith("-") ? "-" : "")
+                        + integerPart.replaceFirst("^0+(?=.)", "")
+                        + digits.substring(integerPart.length());
+                report("Numbers cannot have leading zeros: `" + prefix + "`", "write `" + canonical + "`");
+            }
+        }
+        tokens.add(
+                new Token(type, prefix, new SourcePosition(tokenLine, tokenColumn, tokenStart, current - tokenStart)));
+    }
+
+    /** {@code .5}: reported, then lexed as the float the user meant so parsing continues. */
+    private void leadingDotNumber() {
+        while (isDigit(peek())) {
+            advance();
+        }
+        report("A decimal needs a digit before the point: `" + lexemeSoFar() + "`", "write `0" + lexemeSoFar() + "`");
+        add(TokenType.FLOAT_LITERAL);
+    }
+
+    private String lexemeSoFar() {
+        return source.substring(tokenStart, current);
+    }
+
+    private char previousChar() {
+        return current > 0 ? source.charAt(current - 1) : '\0';
+    }
+
+    private static boolean isExponentMarker(char c) {
+        return c == 'e' || c == 'E';
+    }
+
+    /** {@code 1e5} → {@code 100000}; {@code 2.5e-3} → {@code 0.0025}. */
+    private static String expanded(String exponent) {
+        try {
+            return new BigDecimal(exponent).toPlainString();
+        } catch (NumberFormatException e) {
+            return exponent;
+        }
+    }
+
+    private void report(String message, String suggestion) {
+        diagnostics.add(Diagnostic.error(
+                message, new SourcePosition(tokenLine, tokenColumn, tokenStart, current - tokenStart), suggestion));
     }
 
     private void string() {
         while (!isAtEnd() && peek() != '"' && peek() != '\n') {
-            advance();
+            if (peek() == '\\') {
+                escape();
+            } else {
+                advance();
+            }
         }
         if (isAtEnd() || peek() == '\n') {
             error("Unterminated string literal");
@@ -119,6 +208,24 @@ public final class Lexer {
         }
         advance(); // closing quote
         add(TokenType.STRING_LITERAL);
+    }
+
+    /** Consumes a backslash escape inside a string; the token keeps the raw lexeme. */
+    private void escape() {
+        int escLine = line;
+        int escColumn = column;
+        int escOffset = current;
+        advance(); // backslash
+        if (isAtEnd() || peek() == '\n') {
+            return; // reported as an unterminated string by the caller
+        }
+        char c = advance();
+        if (Token.ESCAPES.indexOf(c) < 0) {
+            diagnostics.add(Diagnostic.error(
+                    "Unknown escape sequence '\\" + c + "'",
+                    new SourcePosition(escLine, escColumn, escOffset, 2),
+                    "supported escapes are \\\", \\\\, \\n and \\t"));
+        }
     }
 
     private void skipWhitespaceAndComments() {

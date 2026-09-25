@@ -1,0 +1,9 @@
+generator { package = "com.example" }
+
+entiy Member {
+  id Long @id
+}
+
+entity Post {
+  id Long @id
+}

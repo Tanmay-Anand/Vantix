@@ -1,0 +1,14 @@
+generator { package = "com.example" }
+
+entity Member {
+  id     Long   @id
+  orders Order[]
+}
+
+entity Order {
+  id       Long   @id
+  member   Member @relation(fields: [memberId], references: [id], onDelete: Cascde)
+  memberId Int
+
+  @@table("orders")
+}

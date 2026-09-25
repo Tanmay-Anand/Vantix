@@ -1,0 +1,5 @@
+error: `Member Accounts` is not a valid table name
+ --> 75-invalid-table-name.vx:6:11
+  |
+6 |   @@table("Member Accounts")
+  |           ^^^^^^^^^^^^^^^^^ use lower_snake_case letters, digits and `_` (max 63 characters)

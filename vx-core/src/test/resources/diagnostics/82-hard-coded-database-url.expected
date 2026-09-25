@@ -1,0 +1,5 @@
+warning: The database URL is hard-coded in the schema
+ --> 82-hard-coded-database-url.vx:3:14
+  |
+3 |   url      = "postgresql://localhost:5432/shop"
+  |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ use `env("DATABASE_URL")` so credentials never land in version control

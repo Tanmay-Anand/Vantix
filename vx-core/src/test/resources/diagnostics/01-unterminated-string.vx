@@ -1,0 +1,6 @@
+generator { package = "com.example" }
+
+entity Member {
+  id   Long   @id
+  name String @default("Ada)
+}

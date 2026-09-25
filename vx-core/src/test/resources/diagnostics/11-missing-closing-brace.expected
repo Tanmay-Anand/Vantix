@@ -1,0 +1,5 @@
+error: Missing `}` to close entity `Member`
+ --> 11-missing-closing-brace.vx:6:1
+  |
+6 | entity Post {
+  | ^^^^^^ add `}` before this line

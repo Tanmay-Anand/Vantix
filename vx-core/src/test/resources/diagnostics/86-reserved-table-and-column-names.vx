@@ -1,0 +1,6 @@
+generator { package = "com.example" }
+
+entity Order {
+  id   Long   @id
+  user String
+}

@@ -1,0 +1,5 @@
+error: Entity attribute `@@unique` cannot be attached to a field
+ --> 16-entity-attribute-on-field-line.vx:5:16
+  |
+5 |   email String @@unique([email])
+  |                ^^ put it on its own line, or use a single `@` for a field attribute

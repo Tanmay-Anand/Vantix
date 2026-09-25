@@ -1,0 +1,11 @@
+warning: Table name `order` is a reserved word in PostgreSQL
+ --> 86-reserved-table-and-column-names.vx:3:8
+  |
+3 | entity Order {
+  |        ^^^^^ add `@@table("orders")`
+
+warning: Column name `user` is a reserved word in PostgreSQL
+ --> 86-reserved-table-and-column-names.vx:5:3
+  |
+5 |   user String
+  |   ^^^^ add `@column("user_value")` or rename the field

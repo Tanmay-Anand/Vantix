@@ -1,0 +1,5 @@
+error: Unsupported provider `mysql`
+ --> 81-unsupported-provider.vx:2:14
+  |
+2 |   provider = "mysql"
+  |              ^^^^^^^ only `postgresql` is supported in v1

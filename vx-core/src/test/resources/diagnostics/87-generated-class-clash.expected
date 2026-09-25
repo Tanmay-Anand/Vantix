@@ -1,0 +1,5 @@
+error: Generated class name `MemberRepository` is used twice: by the repository of `Member` and by entity `MemberRepository`
+ --> 87-generated-class-clash.vx:7:8
+  |
+7 | entity MemberRepository {
+  |        ^^^^^^^^^^^^^^^^ rename one of them

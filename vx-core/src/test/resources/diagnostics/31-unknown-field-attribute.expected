@@ -1,0 +1,5 @@
+error: Unknown attribute `@uniqe`
+ --> 31-unknown-field-attribute.vx:5:17
+  |
+5 |   email String @uniqe
+  |                 ^^^^^ did you mean `@unique`?

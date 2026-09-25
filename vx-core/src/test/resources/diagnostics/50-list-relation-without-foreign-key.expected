@@ -1,0 +1,5 @@
+error: Relation `posts` has no matching `@relation` on `Post`
+ --> 50-list-relation-without-foreign-key.vx:5:3
+  |
+5 |   posts Post[]
+  |   ^^^^^ add `member Member @relation(fields: [memberId], references: [id])` and `memberId Long` to `Post`

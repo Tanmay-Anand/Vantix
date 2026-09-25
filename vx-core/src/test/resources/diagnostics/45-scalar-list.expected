@@ -1,0 +1,5 @@
+error: Lists of scalar values (`String[]`) are not supported
+ --> 45-scalar-list.vx:5:8
+  |
+5 |   tags String[]
+  |        ^^^^^^^^ model the values as their own entity with a one-to-many relation

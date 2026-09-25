@@ -1,0 +1,5 @@
+generator { package = "com.example" }
+
+entity AuditLog {
+  message String
+}

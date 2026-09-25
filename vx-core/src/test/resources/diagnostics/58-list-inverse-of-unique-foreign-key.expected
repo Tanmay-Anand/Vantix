@@ -1,0 +1,5 @@
+error: `Profile.memberId` is `@unique`, so `Member.profiles` can hold at most one `Profile`
+ --> 58-list-inverse-of-unique-foreign-key.vx:5:12
+  |
+5 |   profiles Profile[]
+  |            ^^^^^^^^^ write `profiles Profile?`, or remove `@unique` from `memberId`

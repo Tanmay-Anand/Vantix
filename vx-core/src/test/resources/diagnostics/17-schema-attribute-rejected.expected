@@ -1,0 +1,5 @@
+error: `@@schema` is not supported yet
+ --> 17-schema-attribute-rejected.vx:6:3
+  |
+6 |   @@schema("auth")
+  |   ^^^^^^^^^^^^^^^^ entities live in the datasource's default schema; multi-schema placement is planned

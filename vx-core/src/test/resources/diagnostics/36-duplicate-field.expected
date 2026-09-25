@@ -1,0 +1,8 @@
+error: Duplicate field `email` in entity `Member`
+ --> 36-duplicate-field.vx:6:3
+  |
+6 |   email String @unique
+  |   ^^^^^
+  |
+5 |   email String
+  |   ----- first declared here

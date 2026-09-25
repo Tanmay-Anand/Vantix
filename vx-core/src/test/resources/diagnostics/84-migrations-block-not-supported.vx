@@ -1,0 +1,5 @@
+generator { package = "com.example" }
+
+migrations {
+  directory = "src/main/resources/db/migration"
+}

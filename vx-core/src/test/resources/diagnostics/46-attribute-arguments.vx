@@ -1,0 +1,7 @@
+generator { package = "com.example" }
+
+entity Post {
+  id    Long   @id(1)
+  title String @length()
+  slug  String @column("Slug Name")
+}

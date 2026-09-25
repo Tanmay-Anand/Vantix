@@ -1,0 +1,12 @@
+generator { package = "com.example" }
+
+entity Member {
+  id      Long     @id
+  profile Profile?
+}
+
+entity Profile {
+  id       Long   @id
+  member   Member @relation(fields: [memberId], references: [id])
+  memberId Long   @unique
+}

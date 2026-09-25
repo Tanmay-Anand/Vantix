@@ -1,0 +1,17 @@
+error: `@id` takes no arguments
+ --> 46-attribute-arguments.vx:4:16
+  |
+4 |   id    Long   @id(1)
+  |                ^^^^^^ write `@id`
+
+error: `@length` expects exactly one argument, got 0
+ --> 46-attribute-arguments.vx:5:16
+  |
+5 |   title String @length()
+  |                ^^^^^^^^^ e.g. `@length(120)`
+
+error: `Slug Name` is not a valid column name
+ --> 46-attribute-arguments.vx:6:24
+  |
+6 |   slug  String @column("Slug Name")
+  |                        ^^^^^^^^^^^ use lower_snake_case letters, digits and `_` (max 63 characters)

@@ -1,0 +1,5 @@
+error: Unknown datasource setting `urll`
+ --> 80-unknown-datasource-setting.vx:3:3
+  |
+3 |   urll     = env("DATABASE_URL")
+  |   ^^^^ did you mean `url`?

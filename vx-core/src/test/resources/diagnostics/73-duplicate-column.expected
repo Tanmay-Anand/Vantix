@@ -1,0 +1,8 @@
+error: Fields `email` and `emailCopy` both map to column `email`
+ --> 73-duplicate-column.vx:6:3
+  |
+6 |   emailCopy String @column("email")
+  |   ^^^^^^^^^ use `@column("...")` to give one of them another name
+  |
+5 |   email     String
+  |   ----- `email` is here
