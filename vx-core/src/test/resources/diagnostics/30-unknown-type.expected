@@ -1,0 +1,11 @@
+error: Unknown type `Instnt`
+ --> 30-unknown-type.vx:5:13
+  |
+5 |   createdAt Instnt
+  |             ^^^^^^ did you mean `Instant`?
+
+error: Unknown type `string`
+ --> 30-unknown-type.vx:6:13
+  |
+6 |   nickname  string?
+  |             ^^^^^^ did you mean `String`?

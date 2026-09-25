@@ -1,0 +1,5 @@
+error: Unknown `onDelete` action `Cascde`
+ --> 60-unknown-on-delete-action.vx:9:77
+  |
+9 |   author   Member @relation(fields: [authorId], references: [id], onDelete: Cascde)
+  |                                                                             ^^^^^^ did you mean `Cascade`?

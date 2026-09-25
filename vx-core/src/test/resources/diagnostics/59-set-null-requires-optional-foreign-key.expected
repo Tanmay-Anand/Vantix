@@ -1,0 +1,5 @@
+error: `onDelete: SetNull` needs an optional foreign key
+ --> 59-set-null-requires-optional-foreign-key.vx:9:77
+  |
+9 |   author   Member @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  |                                                                             ^^^^^^^ write `authorId Long?` and `author Member?`

@@ -1,0 +1,5 @@
+error: `@updatedAt` needs an `Instant` or `LocalDateTime` field, not `LocalDate`
+ --> 44-updated-at-wrong-type.vx:5:11
+  |
+5 |   touched LocalDate @updatedAt
+  |           ^^^^^^^^^

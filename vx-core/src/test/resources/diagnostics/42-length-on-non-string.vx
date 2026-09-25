@@ -1,0 +1,6 @@
+generator { package = "com.example" }
+
+entity Product {
+  id    Long    @id
+  price Decimal @length(10)
+}

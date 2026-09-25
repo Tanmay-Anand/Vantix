@@ -1,0 +1,41 @@
+error: A decimal needs a digit before the point: `.5`
+ --> 05-number-literals.vx:5:26
+  |
+5 |   half  Float   @default(.5)
+  |                          ^^ write `0.5`
+
+error: Exponent notation is not supported: `1e5`
+ --> 05-number-literals.vx:6:26
+  |
+6 |   big   Float   @default(1e5)
+  |                          ^^^ write the number out in full, e.g. `100000`
+
+error: Exponent notation is not supported: `2.5e-3`
+ --> 05-number-literals.vx:7:26
+  |
+7 |   tiny  Float   @default(2.5e-3)
+  |                          ^^^^^^ write the number out in full, e.g. `0.0025`
+
+error: Numbers cannot have leading zeros: `010`
+ --> 05-number-literals.vx:8:26
+  |
+8 |   eight Int     @default(010)
+  |                          ^^^ write `10`
+
+error: Numbers cannot have leading zeros: `00.5`
+ --> 05-number-literals.vx:9:26
+  |
+9 |   frac  Decimal @default(00.5)
+  |                          ^^^^ write `0.5`
+
+error: Invalid number `10L`
+  --> 05-number-literals.vx:10:26
+   |
+10 |   total Long    @default(10L)
+   |                          ^^^ numbers take no suffix; write `10`
+
+error: A decimal needs digits after the point: `1.`
+  --> 05-number-literals.vx:11:26
+   |
+11 |   one   Float   @default(1.)
+   |                          ^^ write `1.0`

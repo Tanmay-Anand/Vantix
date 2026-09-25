@@ -1,0 +1,5 @@
+error: Expected `,` or `)` in argument list, found `name`
+ --> 13-missing-closing-paren.vx:6:3
+  |
+6 |   name  String
+  |   ^^^^ missing `)`?

@@ -1,0 +1,5 @@
+error: `fields` refers to unknown field `autorId` on `Post`
+ --> 51-relation-unknown-foreign-key-field.vx:9:38
+  |
+9 |   author   Member @relation(fields: [autorId], references: [id])
+  |                                      ^^^^^^^ did you mean `authorId`?

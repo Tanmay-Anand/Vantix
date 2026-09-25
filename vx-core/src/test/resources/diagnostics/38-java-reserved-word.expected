@@ -1,0 +1,5 @@
+error: `class` is a reserved word in Java and cannot be a field name
+ --> 38-java-reserved-word.vx:5:3
+  |
+5 |   class String
+  |   ^^^^^

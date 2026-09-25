@@ -10,6 +10,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import dev.vantix.core.model.SourcePosition;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class LexerTest {
 
@@ -136,5 +138,87 @@ class LexerTest {
         Lexer lexer = new Lexer("entity /* oops");
         lexer.tokenize();
         assertThat(lexer.diagnostics()).anySatisfy(d -> assertThat(d.message()).contains("Unterminated block comment"));
+    }
+
+    @Test
+    void lexesAFloatLiteralAsOneToken() {
+        List<Token> tokens = new Lexer("@default(0.05)").tokenize();
+        assertThat(tokens.stream().map(Token::type))
+                .containsExactly(
+                        TokenType.AT,
+                        TokenType.IDENTIFIER,
+                        TokenType.LPAREN,
+                        TokenType.FLOAT_LITERAL,
+                        TokenType.RPAREN,
+                        TokenType.EOF);
+        assertThat(tokens.get(3).lexeme()).isEqualTo("0.05");
+    }
+
+    @Test
+    void lexesNegativeAndZeroNumbers() {
+        assertThat(types("-2.5 -3 0 0.05"))
+                .containsExactly(
+                        TokenType.FLOAT_LITERAL,
+                        TokenType.INT_LITERAL,
+                        TokenType.INT_LITERAL,
+                        TokenType.FLOAT_LITERAL,
+                        TokenType.EOF);
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+            delimiter = '|',
+            value = {
+                "1.       | A decimal needs digits after the point: `1.`       | 1      | INT_LITERAL",
+                ".5       | A decimal needs a digit before the point: `.5`     | .5     | FLOAT_LITERAL",
+                "1e5      | Exponent notation is not supported: `1e5`          | 1      | INT_LITERAL",
+                "2.5E-3   | Exponent notation is not supported: `2.5E-3`       | 2.5    | FLOAT_LITERAL",
+                "10L      | Invalid number `10L`                               | 10     | INT_LITERAL",
+                "010      | Numbers cannot have leading zeros: `010`           | 010    | INT_LITERAL",
+                "-007.25  | Numbers cannot have leading zeros: `-007.25`       | -007.25 | FLOAT_LITERAL",
+            })
+    void rejectsMalformedNumbersButKeepsATokenSoParsingContinues(
+            String source, String message, String lexeme, TokenType type) {
+        Lexer lexer = new Lexer(source);
+        List<Token> tokens = lexer.tokenize();
+
+        assertThat(lexer.diagnostics()).singleElement().satisfies(d -> {
+            assertThat(d.message()).isEqualTo(message);
+            assertThat(d.position().length()).isEqualTo(source.length()); // the whole malformed number
+        });
+        assertThat(tokens.getFirst().type()).isEqualTo(type);
+        assertThat(tokens.getFirst().lexeme()).isEqualTo(lexeme);
+        assertThat(tokens).hasSize(2); // the number and EOF: nothing left over to derail the parser
+    }
+
+    @Test
+    void escapedQuotesDoNotEndAString() {
+        Lexer lexer = new Lexer("@default(\"say \\\"hi\\\"\")");
+        List<Token> tokens = lexer.tokenize();
+        assertThat(lexer.diagnostics()).isEmpty();
+        Token string = tokens.get(3);
+        assertThat(string.type()).isEqualTo(TokenType.STRING_LITERAL);
+        assertThat(string.stringValue()).isEqualTo("say \"hi\"");
+        assertThat(tokens.get(4).type()).isEqualTo(TokenType.RPAREN);
+    }
+
+    @Test
+    void resolvesBackslashNewlineAndTabEscapes() {
+        // source text: "a\\b\nc\td"
+        Token string = new Lexer("\"a\\\\b\\nc\\td\"").tokenize().getFirst();
+        assertThat(string.stringValue()).isEqualTo("a\\b\nc\td");
+    }
+
+    @Test
+    void reportsAnUnknownEscapeAtTheBackslash() {
+        Lexer lexer = new Lexer("\"a\\qb\""); // source text: "a\qb"
+        List<Token> tokens = lexer.tokenize();
+        assertThat(lexer.diagnostics()).singleElement().satisfies(d -> {
+            assertThat(d.message()).isEqualTo("Unknown escape sequence '\\q'");
+            assertThat(d.position().column()).isEqualTo(3);
+            assertThat(d.position().length()).isEqualTo(2);
+        });
+        // The string itself still lexes, so the parser is not derailed.
+        assertThat(tokens.getFirst().type()).isEqualTo(TokenType.STRING_LITERAL);
     }
 }

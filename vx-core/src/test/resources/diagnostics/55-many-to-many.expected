@@ -1,0 +1,5 @@
+error: Many-to-many relations are not supported yet
+ --> 55-many-to-many.vx:5:8
+  |
+5 |   tags Tag[]
+  |        ^^^^^ add a join entity with two `@relation` fields; direct many-to-many is planned for Phase 2.5

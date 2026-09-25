@@ -1,0 +1,5 @@
+error: Expected a type after field `email`, found `@`
+ --> 12-missing-field-type.vx:5:9
+  |
+5 |   email @unique
+  |         ^

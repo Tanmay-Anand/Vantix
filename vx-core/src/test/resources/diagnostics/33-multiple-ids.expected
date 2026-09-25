@@ -1,0 +1,5 @@
+error: Entity `Member` has more than one `@id` field
+ --> 33-multiple-ids.vx:5:3
+  |
+5 |   email String @id
+  |   ^^^^^ use a single `@id`; composite keys are planned for Phase 2.5

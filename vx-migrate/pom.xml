@@ -24,7 +24,7 @@
 
     <!-- SQL-renderer and introspection tests run against real PostgreSQL (14-17 in CI).
          Testcontainers 2.x renamed its modules to the testcontainers-* prefix; versions come
-         from the testcontainers-bom imported transitively via the Spring Boot 4.1 BOM. -->
+         from the testcontainers-bom the parent imports (pinned independently of Spring Boot). -->
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>testcontainers-postgresql</artifactId>

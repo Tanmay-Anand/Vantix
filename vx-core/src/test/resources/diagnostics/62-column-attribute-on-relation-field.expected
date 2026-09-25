@@ -1,0 +1,5 @@
+error: `@unique` cannot be used on relation field `author`
+ --> 62-column-attribute-on-relation-field.vx:9:67
+  |
+9 |   author   Member @relation(fields: [authorId], references: [id]) @unique
+  |                                                                   ^^^^^^^ column attributes go on the foreign-key field

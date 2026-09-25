@@ -1,0 +1,5 @@
+error: `com.acme.class` is not a valid Java package name
+ --> 83-invalid-package.vx:2:13
+  |
+2 |   package = "com.acme.class"
+  |             ^^^^^^^^^^^^^^^^

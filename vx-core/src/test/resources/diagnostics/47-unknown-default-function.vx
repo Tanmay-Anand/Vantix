@@ -1,0 +1,7 @@
+generator { package = "com.example" }
+
+entity Post {
+  id        Long    @id
+  views     Int     @default(autoincrement())
+  createdAt Instant @default(nw())
+}

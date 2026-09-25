@@ -1,0 +1,14 @@
+generator { package = "com.example" }
+
+entity Member {
+  id      Long    @id
+  written Post[]
+}
+
+entity Post {
+  id         Long @id
+  author     Member @relation(fields: [authorId], references: [id])
+  authorId   Long
+  reviewer   Member @relation(fields: [reviewerId], references: [id])
+  reviewerId Long
+}

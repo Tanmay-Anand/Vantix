@@ -1,0 +1,5 @@
+error: Composite foreign keys are not supported yet
+ --> 64-composite-foreign-key.vx:9:37
+  |
+9 |   author   Member @relation(fields: [authorId, id], references: [id, id])
+  |                                     ^^^^^^^^^^^^^^ use a single field; composite keys are planned for Phase 2.5

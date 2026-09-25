@@ -39,7 +39,7 @@
   <build>
     <plugins>
       <!-- vx-runtime ships in user apps: keep it Spring-free (the starter, not the runtime,
-           owns the Boot coupling — IMPLEMENTATION_PLAN.md U1). -->
+           owns the Boot coupling). -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>

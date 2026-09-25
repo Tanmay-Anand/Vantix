@@ -1,0 +1,5 @@
+error: `output` must be relative to the project directory, not absolute
+ --> 91-output-absolute.vx:3:13
+  |
+3 |   output  = "/tmp/generated"
+  |             ^^^^^^^^^^^^^^^^ use a directory inside the project, e.g. `target/generated-sources/vantix`

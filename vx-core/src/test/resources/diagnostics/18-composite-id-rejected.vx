@@ -1,0 +1,8 @@
+generator { package = "com.example" }
+
+entity Membership {
+  memberId Long
+  teamId Long
+
+  @@id([memberId, teamId])
+}

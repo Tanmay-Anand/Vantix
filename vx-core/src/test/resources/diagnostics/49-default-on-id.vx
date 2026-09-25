@@ -1,0 +1,10 @@
+generator { package = "com.example" }
+
+entity Token {
+  id    UUID @id @default(uuid())
+  value String
+}
+
+entity Counter {
+  id Long @id @default(1)
+}

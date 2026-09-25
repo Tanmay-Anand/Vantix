@@ -7,27 +7,47 @@ package dev.vantix.cli;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Model.CommandSpec;
+import picocli.CommandLine.Spec;
 
 /**
- * Root of the {@code vantix} command tree. Phase 0 skeleton: the subcommands (init, validate,
- * generate, migrate, db pull, studio, doctor) are wired in Phase 1+.
+ * Root of the {@code vantix} command tree. Phase 1 ships {@code init}, {@code validate} and
+ * {@code generate}; {@code migrate}, {@code db}, {@code studio} and {@code doctor} arrive with their
+ * phases.
  */
 @Command(
         name = "vantix",
         mixinStandardHelpOptions = true,
         versionProvider = VantixCli.ManifestVersionProvider.class,
-        description = "Prisma-style developer-experience toolchain for Spring Boot.")
+        description = "Prisma-style developer-experience toolchain for Spring Boot.",
+        subcommands = {InitCommand.class, ValidateCommand.class, GenerateCommand.class},
+        exitCodeListHeading = "%nExit codes:%n",
+        exitCodeList = {
+            "0:success",
+            "1:the schema has errors, is missing, or generated code would not compile",
+            "2:invalid command-line usage"
+        })
 public final class VantixCli implements Runnable {
+
+    @Spec
+    CommandSpec spec;
 
     @Override
     public void run() {
-        // With no subcommand, print usage. Real subcommands land in Phase 1.
-        CommandLine.usage(this, System.out);
+        spec.commandLine().usage(spec.commandLine().getOut());
+    }
+
+    /** The configured command line; {@link #main} and tests share it. */
+    public static CommandLine commandLine() {
+        return new CommandLine(new VantixCli()).setExecutionExceptionHandler((e, cmd, parsed) -> {
+            cmd.getErr().println("vantix: unexpected error: " + e);
+            cmd.getErr().flush();
+            return 1;
+        });
     }
 
     public static void main(String[] args) {
-        int exitCode = new CommandLine(new VantixCli()).execute(args);
-        System.exit(exitCode);
+        System.exit(commandLine().execute(args));
     }
 
     /** Reads the version from the JAR manifest so {@code --version} stays accurate across releases. */

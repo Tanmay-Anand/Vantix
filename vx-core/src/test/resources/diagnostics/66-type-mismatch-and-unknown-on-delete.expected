@@ -1,0 +1,14 @@
+error: Unknown `onDelete` action `Cascde`
+  --> 66-type-mismatch-and-unknown-on-delete.vx:10:77
+   |
+10 |   member   Member @relation(fields: [memberId], references: [id], onDelete: Cascde)
+   |                                                                             ^^^^^^ did you mean `Cascade`?
+
+error: Type mismatch: `Order.memberId` is `Int` but `Member.id` is `Long`
+  --> 66-type-mismatch-and-unknown-on-delete.vx:11:12
+   |
+11 |   memberId Int
+   |            ^^^ change `memberId` to `Long`
+   |
+10 |   member   Member @relation(fields: [memberId], references: [id], onDelete: Cascde)
+   |                                      -------- used as the foreign key here

@@ -1,0 +1,5 @@
+error: Unterminated string literal
+ --> 01-unterminated-string.vx:5:24
+  |
+5 |   name String @default("Ada)
+  |                        ^^^^^

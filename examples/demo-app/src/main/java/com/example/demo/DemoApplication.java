@@ -9,10 +9,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * Dogfood application. From Phase 1 this boots against Vantix-generated entities and repositories
- * and doubles as the end-to-end integration test ({@code init -> generate -> migrate -> boot ->
- * query}). In Phase 0 it exists only to prove the generated-code contract compiles against the
- * Spring Boot baseline.
+ * Dogfood application: boots on the entities and repositories that {@code vx-maven-plugin}
+ * generates from {@code vantix/schema.vx}, and doubles as the end-to-end test bed
+ * ({@code generate -> boot -> query} today; {@code migrate} joins in Phase 2).
  */
 @SpringBootApplication
 public class DemoApplication {

@@ -1,0 +1,5 @@
+error: Relation `written` is ambiguous: `Post` has 2 relations to `Member` (`author`, `reviewer`)
+ --> 56-ambiguous-relation.vx:5:3
+  |
+5 |   written Post[]
+  |   ^^^^^^^ multiple relations between the same two entities are not supported yet

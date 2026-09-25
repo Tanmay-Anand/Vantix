@@ -1,0 +1,5 @@
+error: The inverse side of a one-to-one relation must be optional
+ --> 57-one-to-one-inverse-must-be-optional.vx:5:11
+  |
+5 |   profile Profile
+  |           ^^^^^^^ write `Profile?`; a `Member` can exist before its `Profile`

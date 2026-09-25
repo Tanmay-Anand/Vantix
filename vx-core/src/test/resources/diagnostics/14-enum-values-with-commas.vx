@@ -1,0 +1,3 @@
+generator { package = "com.example" }
+
+enum Role { ADMIN, MEMBER, GUEST }

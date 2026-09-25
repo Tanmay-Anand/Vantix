@@ -1,0 +1,5 @@
+error: `@length` only applies to `String` fields, but `price` is `Decimal`
+ --> 42-length-on-non-string.vx:5:17
+  |
+5 |   price Decimal @length(10)
+  |                 ^^^^^^^^^^^ use `@precision(p, s)` for `Decimal`

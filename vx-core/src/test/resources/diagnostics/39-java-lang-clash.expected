@@ -1,0 +1,5 @@
+error: `Record` would clash with `java.lang.Record` in generated code
+ --> 39-java-lang-clash.vx:3:8
+  |
+3 | entity Record {
+  |        ^^^^^^ choose another name; `@@table("...")` can keep the table name you want

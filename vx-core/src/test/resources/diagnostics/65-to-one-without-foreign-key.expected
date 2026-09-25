@@ -1,0 +1,5 @@
+error: Relation `profile` needs a foreign key on one side
+ --> 65-to-one-without-foreign-key.vx:5:3
+  |
+5 |   profile Profile?
+  |   ^^^^^^^ add `@relation(fields: [profileId], references: [id])` here, or a matching `@relation` field on `Profile`

@@ -1,0 +1,5 @@
+error: `author` is a relation and has no column of its own
+  --> 71-index-on-relation-field.vx:12:12
+   |
+12 |   @@index([author])
+   |            ^^^^^^ index its foreign key `authorId` instead

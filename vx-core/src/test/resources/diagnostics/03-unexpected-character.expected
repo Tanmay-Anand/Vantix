@@ -1,0 +1,5 @@
+error: Unexpected character '$'
+ --> 03-unexpected-character.vx:5:12
+  |
+5 |   cost Int $
+  |            ^

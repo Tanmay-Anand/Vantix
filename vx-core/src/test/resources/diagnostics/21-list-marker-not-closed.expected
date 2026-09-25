@@ -1,0 +1,5 @@
+error: Expected `]` to close the list marker `[]`
+ --> 21-list-marker-not-closed.vx:6:1
+  |
+6 | }
+  | ^

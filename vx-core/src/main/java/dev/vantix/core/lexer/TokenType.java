@@ -16,6 +16,7 @@ package dev.vantix.core.lexer;
 public enum TokenType {
     IDENTIFIER,
     INT_LITERAL,
+    FLOAT_LITERAL,
     STRING_LITERAL,
 
     LBRACE, // {

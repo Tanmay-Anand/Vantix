@@ -13,7 +13,7 @@
   <artifactId>vx-spring-boot-starter</artifactId>
   <name>Vantix :: Spring Boot Starter</name>
   <description>Auto-configures the query client bean and the Hibernate error translator. This is the
-    ONE Vantix artifact intentionally version-pinned to Spring Boot 4 (IMPLEMENTATION_PLAN.md U1) —
+    ONE Vantix artifact intentionally version-pinned to Spring Boot 4 —
     the toolchain modules stay Boot-version-agnostic.</description>
 
   <dependencies>

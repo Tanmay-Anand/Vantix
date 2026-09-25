@@ -1,0 +1,7 @@
+datasource {
+  provider = "postgresql"
+  url      = "postgresql://localhost:5432/shop"
+}
+
+generator { package = "com.example" }
+

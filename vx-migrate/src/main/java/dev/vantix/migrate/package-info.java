@@ -9,7 +9,7 @@
  *
  * <ul>
  *   <li>{@code snapshot} — read/write {@code vantix/snapshot.json} (with a leading
- *       {@code formatVersion}; see IMPLEMENTATION_PLAN.md D14).
+ *       {@code formatVersion}, so the snapshot format can evolve without breaking existing snapshots).
  *   <li>{@code diff} — {@code SchemaDiffer} produces a sealed {@code List<SchemaChange>}; pure, no
  *       database.
  *   <li>{@code sql} — {@code PostgresRenderer} emits topologically-ordered DDL to Flyway-named

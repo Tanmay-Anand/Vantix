@@ -1,0 +1,5 @@
+error: `Member.email` must be `@id` or `@unique` to be referenced by a foreign key
+  --> 61-references-non-unique-field.vx:10:70
+   |
+10 |   author      Member   @relation(fields: [authorEmail], references: [email])
+   |                                                                      ^^^^^

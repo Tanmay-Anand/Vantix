@@ -1,0 +1,45 @@
+// The demo shop's schema. `mvn compile` turns this into JPA entities and Spring Data
+// repositories under target/generated-sources/vantix; nothing generated is committed.
+
+datasource {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator {
+  package = "com.example.demo.model"
+}
+
+enum OrderStatus { PENDING PAID SHIPPED CANCELLED }
+
+entity User {
+  id        Long     @id @generated
+  email     String   @unique @length(180)
+  name      String   @length(120)
+  createdAt Instant  @default(now())
+  updatedAt Instant  @updatedAt
+  orders    Order[]
+  profile   Profile?
+
+  @@index([createdAt])
+  @@table("users")
+}
+
+entity Profile {
+  id     Long    @id @generated
+  bio    String? @length(500)
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Long    @unique
+}
+
+entity Order {
+  id       Long        @id @generated
+  status   OrderStatus @default(PENDING)
+  total    Decimal     @precision(12, 2)
+  placedAt Instant     @default(now())
+  user     User        @relation(fields: [userId], references: [id], onDelete: Restrict)
+  userId   Long
+
+  @@index([userId, placedAt])
+  @@table("orders")
+}

@@ -1,0 +1,11 @@
+error: `autoincrement()` is not a Vantix default
+ --> 47-unknown-default-function.vx:5:30
+  |
+5 |   views     Int     @default(autoincrement())
+  |                              ^^^^^^^^^^^^^ mark the `@id` field `@generated` instead
+
+error: Unknown default function `nw()`
+ --> 47-unknown-default-function.vx:6:30
+  |
+6 |   createdAt Instant @default(nw())
+  |                              ^^ did you mean `now()`?

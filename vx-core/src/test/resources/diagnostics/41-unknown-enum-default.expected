@@ -1,0 +1,5 @@
+error: `ACTIV` is not a value of enum `Status`
+ --> 41-unknown-enum-default.vx:7:26
+  |
+7 |   status Status @default(ACTIV)
+  |                          ^^^^^ did you mean `ACTIVE`?

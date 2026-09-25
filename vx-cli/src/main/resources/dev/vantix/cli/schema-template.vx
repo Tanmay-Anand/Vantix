@@ -1,0 +1,20 @@
+// Vantix schema: the single source of truth for your entities and repositories.
+// Edit it, then run `mvn compile` (or `vantix generate`). Language reference: docs/grammar.md
+
+datasource {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator {
+  package = "${package}"
+}
+
+entity User {
+  id        Long    @id @generated
+  email     String  @unique @length(180)
+  name      String  @length(120)
+  createdAt Instant @default(now())
+
+  @@table("users")
+}

@@ -1,0 +1,5 @@
+warning: `Member.profile` cannot be loaded lazily: Hibernate runs one extra query per `Member` to fill it
+ --> 67-inverse-one-to-one-warning.vx:5:3
+  |
+5 |   profile Profile?
+  |   ^^^^^^^ if you rarely need it, remove this field and call `ProfileRepository.findByMemberId(...)` instead

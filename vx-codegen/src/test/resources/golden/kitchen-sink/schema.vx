@@ -1,0 +1,42 @@
+// Every scalar type, every default kind, and the less common attributes.
+generator {
+  package       = "com.example.sink"
+  entitySuffix  = "Entity"
+  generateRepos = false
+}
+
+enum Visibility { PUBLIC PRIVATE }
+
+entity Document {
+  id          UUID          @id @generated
+  slug        String        @unique @column("url_slug")
+  title       String        @default("Untitled")
+  body        String?       @raw("text")
+  pages       Int           @default(1)
+  views       Long          @default(0)
+  price       Decimal?      @precision(10, 2) @default(9.99)
+  score       Float         @default(0.5)
+  published   Boolean       @default(false)
+  visibility  Visibility    @default(PRIVATE)
+  token       UUID          @default(uuid())
+  createdAt   Instant       @default(now())
+  updatedAt   LocalDateTime @updatedAt
+  releaseDate LocalDate?
+  metadata    Json?
+  thumbnail   Bytes?
+  draftNotes  String?       @ignore
+  folder      Folder?       @relation(fields: [folderId], references: [id], onDelete: SetNull)
+  folderId    Long?
+
+  @@unique([title, folderId], name: "document_title_per_folder")
+  @@table("documents")
+}
+
+entity Folder {
+  id        Long       @id @generated
+  name      String
+  parent    Folder?    @relation(fields: [parentId], references: [id])
+  parentId  Long?
+  children  Folder[]
+  documents Document[]
+}

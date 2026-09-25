@@ -1,0 +1,12 @@
+generator { package = "com.example" }
+
+entity Member {
+  id    Long   @id
+  email String
+}
+
+entity Post {
+  id          Long   @id
+  author      Member   @relation(fields: [authorEmail], references: [email])
+  authorEmail String
+}

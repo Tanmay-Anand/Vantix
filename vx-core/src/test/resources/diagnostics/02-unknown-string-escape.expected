@@ -1,0 +1,5 @@
+error: Unknown escape sequence '\q'
+ --> 02-unknown-string-escape.vx:5:28
+  |
+5 |   name String @default("tab\q")
+  |                            ^^ supported escapes are \", \\, \n and \t

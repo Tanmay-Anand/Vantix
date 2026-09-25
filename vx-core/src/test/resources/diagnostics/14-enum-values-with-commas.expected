@@ -1,0 +1,5 @@
+error: Enum values are separated by spaces or newlines, not commas
+ --> 14-enum-values-with-commas.vx:3:18
+  |
+3 | enum Role { ADMIN, MEMBER, GUEST }
+  |                  ^ remove the `,`

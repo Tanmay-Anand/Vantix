@@ -1,0 +1,15 @@
+generator { package = "com.example" }
+
+entity Numbers {
+  id    Long    @id
+  half  Float   @default(.5)
+  big   Float   @default(1e5)
+  tiny  Float   @default(2.5e-3)
+  eight Int     @default(010)
+  frac  Decimal @default(00.5)
+  total Long    @default(10L)
+  one   Float   @default(1.)
+  neg   Int     @default(-3)
+  small Decimal @default(-0.25)
+  zero  Int     @default(0)
+}

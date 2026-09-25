@@ -1,0 +1,5 @@
+error: `3000000000` is out of range for `Int`
+ --> 48-int-default-out-of-range.vx:5:23
+  |
+5 |   views Int  @default(3000000000)
+  |                       ^^^^^^^^^^

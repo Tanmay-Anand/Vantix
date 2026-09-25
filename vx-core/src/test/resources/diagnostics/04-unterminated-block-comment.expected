@@ -1,0 +1,5 @@
+error: Unterminated block comment
+ --> 04-unterminated-block-comment.vx:6:1
+  |
+6 | /* forgot to close
+  | ^^^^^^^^^^^^^^^^^^

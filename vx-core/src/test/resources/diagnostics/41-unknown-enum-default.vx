@@ -1,0 +1,8 @@
+generator { package = "com.example" }
+
+enum Status { ACTIVE BANNED }
+
+entity Member {
+  id     Long   @id
+  status Status @default(ACTIV)
+}

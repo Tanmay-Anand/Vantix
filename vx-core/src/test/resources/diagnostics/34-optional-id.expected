@@ -1,0 +1,5 @@
+error: The `@id` field `id` cannot be optional
+ --> 34-optional-id.vx:4:6
+  |
+4 |   id Long? @id
+  |      ^^^^^ remove the `?`

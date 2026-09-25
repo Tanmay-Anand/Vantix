@@ -1,0 +1,8 @@
+error: Type mismatch: `Post.authorId` is `Int` but `Member.id` is `Long`
+  --> 52-relation-type-mismatch.vx:10:12
+   |
+10 |   authorId Int
+   |            ^^^ change `authorId` to `Long`
+   |
+ 9 |   author   Member @relation(fields: [authorId], references: [id])
+   |                                      -------- used as the foreign key here

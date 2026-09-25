@@ -1,0 +1,23 @@
+error: Unknown type `Strng`
+ --> 19-many-errors-in-one-pass.vx:5:10
+  |
+5 |   email  Strng   @unique
+  |          ^^^^^ did you mean `String`?
+
+error: Unknown attribute `@lenght`
+ --> 19-many-errors-in-one-pass.vx:6:19
+  |
+6 |   age    Int     @lenght(3)
+  |                   ^^^^^^ did you mean `@length`?
+
+error: Unknown type `Rol`
+ --> 19-many-errors-in-one-pass.vx:7:10
+  |
+7 |   role   Rol
+  |          ^^^
+
+error: Entity `Post` has no `@id` field
+  --> 19-many-errors-in-one-pass.vx:10:8
+   |
+10 | entity Post {
+   |        ^^^^ add `id Long @id @generated`

@@ -1,0 +1,6 @@
+generator {
+  package          = "com.example"
+  useGenerationGap = "true"
+  generateRepos    = yes
+  entitySufix      = "Entity"
+}

@@ -1,0 +1,5 @@
+generator {
+  package           = "com.example"
+  generateMetamodel = true
+  generateDtos      = true
+}

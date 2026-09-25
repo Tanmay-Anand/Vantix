@@ -1,0 +1,11 @@
+error: `@relation` on `author` is missing `references: [...]`
+ --> 63-relation-missing-arguments.vx:9:19
+  |
+9 |   author   Member @relation(fields: [authorId])
+  |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ name the referenced field on `Member`, e.g. `references: [id]`
+
+error: `@relation` arguments must be named
+  --> 63-relation-missing-arguments.vx:11:29
+   |
+11 |   editor   Member @relation([editorId], [id])
+   |                             ^^^^^^^^^^ e.g. `@relation(fields: [userId], references: [id])`

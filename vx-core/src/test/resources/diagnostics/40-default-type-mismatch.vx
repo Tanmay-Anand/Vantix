@@ -1,0 +1,9 @@
+generator { package = "com.example" }
+
+entity Product {
+  id     Long    @id
+  name   String  @default(42)
+  stock  Int     @default(1.5)
+  active Boolean @default("yes")
+  added  String  @default(now())
+}

@@ -1,0 +1,5 @@
+error: `output` must be a directory inside the project
+ --> 90-output-outside-project.vx:3:13
+  |
+3 |   output  = "../../elsewhere"
+  |             ^^^^^^^^^^^^^^^^^ use a directory inside the project, e.g. `target/generated-sources/vantix`

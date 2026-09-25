@@ -1,0 +1,5 @@
+error: Scale must be between 0 and the precision (4)
+ --> 43-precision-out-of-range.vx:5:31
+  |
+5 |   price Decimal @precision(4, 6)
+  |                               ^
