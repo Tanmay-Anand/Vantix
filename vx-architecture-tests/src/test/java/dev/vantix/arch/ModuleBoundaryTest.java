@@ -13,7 +13,7 @@ import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
 
 /**
- * Enforces the load-bearing architectural guarantees from IMPLEMENTATION_PLAN.md §2.3:
+ * Enforces the load-bearing module boundaries (see CONTRIBUTING.md, "Module boundaries"):
  *
  * <ul>
  *   <li>the compile-time toolchain (CLI, codegen, JavaPoet, picocli) must never leak into the

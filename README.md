@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="vantix-logo-transparent.png" alt="Vantix" height="120" />
+  <img src="vantix-logo-solid.png" alt="Vantix" height="120" />
 </p>
 
 <h1 align="center">Vantix</h1>
@@ -33,24 +33,24 @@ The problem you have right now: your domain model lives in three places at once.
 
 ## Feature Overview
 
-| Feature                        | Description                                                                                                               |
-| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
-| **Schema DSL (`schema.vx`)**   | Declarative entities, scalar fields, enums, relations, indexes, and attributes in one file                                |
-| **Compiler-grade diagnostics** | Multi-error reporting with source positions, error recovery, and suggestion hints                                         |
-| **Entity generation**          | JPA entities into `target/generated-sources` — regenerated every build, never hand-edited                                 |
-| **Repository generation**      | One `JpaRepository` per entity, plus derived finders for `@unique` fields                                                 |
-| **Metamodel generation**       | Phase 3: typed field constants (`UserFields.EMAIL`, deliberately not `User_`) backing the query builder                  |
-| **Migration generation**       | `vantix migrate dev` → snapshot diff → ordered DDL → Flyway-named SQL file                                                |
-| **Rename detection**           | Interactive prompt when a drop+add is ambiguously a rename; preserves data when you confirm                               |
-| **Destructive guard**          | `DROP COLUMN` / `DROP TABLE` require `--allow-destructive`; emitted commented-out otherwise                               |
-| **Drift check**                | `vantix migrate diff --against-db` compares snapshot vs live database and reports divergence                              |
-| **Database introspection**     | `vantix db pull` reads `information_schema` and writes a `schema.vx` for an existing DB                                   |
-| **Type-safe query builder**    | Fluent `where`/`orderBy`/`include`/paging API compiled to JPA Criteria at runtime                                         |
+| Feature                        | Description                                                                                                                    |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| **Schema DSL (`schema.vx`)**   | Declarative entities, scalar fields, enums, relations, indexes, and attributes in one file                                     |
+| **Compiler-grade diagnostics** | Multi-error reporting with source positions, error recovery, and suggestion hints                                              |
+| **Entity generation**          | JPA entities into `target/generated-sources` — regenerated every build, never hand-edited                                      |
+| **Repository generation**      | One `JpaRepository` per entity, plus derived finders for `@unique` fields                                                      |
+| **Metamodel generation**       | Phase 3: typed field constants (`UserFields.EMAIL`, deliberately not `User_`) backing the query builder                        |
+| **Migration generation**       | `vantix migrate dev` → snapshot diff → ordered DDL → Flyway-named SQL file                                                     |
+| **Rename detection**           | Interactive prompt when a drop+add is ambiguously a rename; preserves data when you confirm                                    |
+| **Destructive guard**          | `DROP COLUMN` / `DROP TABLE` require `--allow-destructive`; emitted commented-out otherwise                                    |
+| **Drift check**                | `vantix migrate diff --against-db` compares snapshot vs live database and reports divergence                                   |
+| **Database introspection**     | `vantix db pull` reads `information_schema` and writes a `schema.vx` for an existing DB                                        |
+| **Type-safe query builder**    | Fluent `where`/`orderBy`/`include`/paging API compiled to JPA Criteria at runtime                                              |
 | **Explicit fetching**          | `.include(UserFields.ADDRESS)` compiles to fetch joins / `EntityGraph` — the structural cure for `LazyInitializationException` |
-| **Vantix Studio**              | Local-only web UI: browse tables, paginate, edit rows, inspect FKs                                                        |
-| **Error translation**          | Spring Boot starter that rewrites common Hibernate exceptions into diagnosis + fixes                                      |
-| **Maven plugin**               | Binds `generate` to the `generate-sources` phase; `mvn compile` is all a user needs                                       |
-| **Ejectability**               | Generated code is plain, readable Spring code with no proprietary runtime — delete Vantix and keep working                |
+| **Vantix Studio**              | Local-only web UI: browse tables, paginate, edit rows, inspect FKs                                                             |
+| **Error translation**          | Spring Boot starter that rewrites common Hibernate exceptions into diagnosis + fixes                                           |
+| **Maven plugin**               | Binds `generate` to the `generate-sources` phase; `mvn compile` is all a user needs                                            |
+| **Ejectability**               | Generated code is plain, readable Spring code with no proprietary runtime — delete Vantix and keep working                     |
 
 ---
 
@@ -415,20 +415,20 @@ Studio talks to the database over **plain JDBC**, not through your entities — 
 
 ## Tech Stack
 
-| Layer             | Technology                                                                              |
-| ----------------- | --------------------------------------------------------------------------------------- |
-| Language          | Java 21 (records, sealed interfaces, pattern matching)                                  |
-| Parser            | Hand-written lexer + recursive-descent parser (no ANTLR dependency)                     |
-| Code generation   | [JavaPoet](https://github.com/palantir/javapoet) (Palantir fork — Square's is archived) |
-| CLI               | [picocli](https://picocli.info)                                                         |
-| Build integration | Maven Plugin API (`@Mojo`, `generate-sources` phase)                                    |
+| Layer             | Technology                                                                                      |
+| ----------------- | ----------------------------------------------------------------------------------------------- |
+| Language          | Java 21 (records, sealed interfaces, pattern matching)                                          |
+| Parser            | Hand-written lexer + recursive-descent parser (no ANTLR dependency)                             |
+| Code generation   | [JavaPoet](https://github.com/palantir/javapoet) (Palantir fork — Square's is archived)         |
+| CLI               | [picocli](https://picocli.info)                                                                 |
+| Build integration | Maven Plugin API (`@Mojo`, `generate-sources` phase)                                            |
 | Target ORM        | Hibernate ORM 7 via Spring Data JPA (Boot 4.1); generated code also CI-tested on 6.6 / Boot 3.5 |
-| Migrations        | Flyway (Vantix emits, Flyway executes)                                                  |
-| Database (v1)     | PostgreSQL 14–17                                                                        |
-| Studio backend    | Spring Boot + JDBC + `information_schema`                                               |
-| Studio frontend   | React 19, TypeScript 5, Tailwind CSS v4                                                 |
-| Testing           | JUnit 5, Testcontainers, golden-file snapshots, Java Compiler API                       |
-| Distribution      | Maven Central · Maven plugin · standalone JAR · GraalVM native binary                   |
+| Migrations        | Flyway (Vantix emits, Flyway executes)                                                          |
+| Database (v1)     | PostgreSQL 14–17                                                                                |
+| Studio backend    | Spring Boot + JDBC + `information_schema`                                                       |
+| Studio frontend   | React 19, TypeScript 5, Tailwind CSS v4                                                         |
+| Testing           | JUnit 5, Testcontainers, golden-file snapshots, Java Compiler API                               |
+| Distribution      | Maven Central · Maven plugin · standalone JAR · GraalVM native binary                           |
 
 ---
 
@@ -570,7 +570,7 @@ mvn vantix:studio
 | `vantix init`             | Scaffold `vantix/schema.vx` and a `.gitignore` entry for the generated sources               |
 | `vantix validate`         | Parse and semantically check the schema; report all errors at once; exit non-zero on failure |
 | `vantix generate`         | Emit entities and repositories into the configured output directory (metamodel: Phase 3)     |
-| `vantix generate --watch` | Regenerate on schema file change (watches the directory, so rename-on-save editors work)    |
+| `vantix generate --watch` | Regenerate on schema file change (watches the directory, so rename-on-save editors work)     |
 | `vantix format`           | Canonically format `schema.vx` (alignment, ordering)                                         |
 
 ### Migrations

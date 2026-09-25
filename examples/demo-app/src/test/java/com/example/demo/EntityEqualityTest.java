@@ -30,7 +30,10 @@ class EntityEqualityTest {
     @Test
     void anInstanceEqualsItself() {
         User u = new User();
-        assertThat(u).isEqualTo(u);
+        // A second reference, not `isEqualTo(u)`: the point is to exercise equals()' `this == o`
+        // branch for an unsaved instance (null id), which a self-assertion would short-circuit.
+        Object sameInstance = u;
+        assertThat(u.equals(sameInstance)).isTrue();
     }
 
     @Test

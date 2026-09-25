@@ -1,7 +1,7 @@
 # The Vantix Schema Language (`schema.vx`) — Grammar v1
 
-This is the normative grammar for **Phase 1**. It is deliberately small (see
-`IMPLEMENTATION_PLAN.md` §"SDL feature creep"). Every construct here costs parser + validator +
+This is the normative grammar for **Phase 1**. It is deliberately small (see "SDL feature
+creep" in `CLAUDE.md`). Every construct here costs parser + validator +
 codegen + differ + SQL + docs, so the language says *no* by default.
 
 **In scope for v1:** entities, scalar fields, enums, single-field `@id`, one-to-one and one-to-many

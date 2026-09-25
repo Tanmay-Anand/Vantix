@@ -10,6 +10,9 @@ target/
 # Maven wrapper: keep the scripts + .mvn/wrapper/maven-wrapper.properties, ignore the downloaded jar.
 .mvn/wrapper/maven-wrapper.jar
 
+# Private planning notes: kept locally, never published.
+/internal-docs/
+
 # IDE
 *.iml
 .idea/

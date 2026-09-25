@@ -65,8 +65,8 @@ Spring appears on their classpath.
 
 Vantix targets **Spring Boot 4.1 / Hibernate 7** as its primary runtime. Only
 `vx-spring-boot-starter` is version-pinned to Boot 4; the generated entity/repository contract stays
-portable and is checked against Boot 3.5 in a CI matrix job. See `IMPLEMENTATION_PLAN.md` (U1) for
-the rationale.
+portable and is checked against Boot 3.5 in a CI matrix job. Boot 3.5 reached OSS end-of-life on 2026-06-30, which is why
+Boot 4.1 is the primary target.
 
 ## Commit / PR conventions
 

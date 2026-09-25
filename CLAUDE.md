@@ -6,8 +6,8 @@ A Prisma-style developer-experience toolchain for Spring Boot — one `schema.vx
 
 Pre-alpha. **Phases 0 and 1 are done**: `schema.vx` → lexer → parser → semantic analysis →
 entities + repositories via `vantix init|validate|generate [--watch]` and the Maven plugin; the demo
-app boots on generated code against PostgreSQL. Phase 2 (migrations) is next. `IMPLEMENTATION_PLAN.md`
-§8 is the live checklist; `docs/grammar.md` is the normative language spec (grammar + semantics).
+app boots on generated code against PostgreSQL. Phase 2 (migrations) is next. `internal-docs/IMPLEMENTATION_PLAN.md`
+(git-ignored, private; never reference it from public files) §8 is the live checklist; `docs/grammar.md` is the normative language spec (grammar + semantics).
 
 ## Working in this repo
 
@@ -27,7 +27,7 @@ app boots on generated code against PostgreSQL. Phase 2 (migrations) is next. `I
 - **Code generation:** JavaPoet (Palantir fork)
 - **CLI:** picocli
 - **Build integration:** Maven plugin (`generate-sources` phase)
-- **ORM target:** Hibernate 6.6+ via Spring Data JPA
+- **ORM target:** Hibernate 7 via Spring Data JPA (Boot 4.1); generated code also CI-tested on Hibernate 6.6 / Boot 3.5
 - **Migrations:** Flyway (Vantix emits SQL, Flyway runs it)
 - **Database (v1):** PostgreSQL only
 - **Studio frontend:** React 19, TypeScript 5, Tailwind CSS v4
